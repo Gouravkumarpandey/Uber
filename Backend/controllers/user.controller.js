@@ -13,7 +13,7 @@ module.exports.registerUser = async (req, resizeBy, next) =>{
 
  console.log(req.body);
 
- const { firstname, email, password} = req.body;
+ const { fullname, email, password} = req.body;
 
  const hashedPassword = await userModel.hashedPassword(password);
 
