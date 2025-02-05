@@ -53,3 +53,8 @@ module.exports.loginUser = async (req, res, next) =>{
         
 }
 
+module.exports.getUserProfile = async (req, res, next) =>{
+    const user = await userService.findUserById(req.user._id);
+    res.status(200).json(user);
+}
+
