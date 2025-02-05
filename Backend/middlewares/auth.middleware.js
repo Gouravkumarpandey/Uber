@@ -1,17 +1,24 @@
-const userModule = required ('../models/user.model.js');
-const bcrypt = required ('bcrypt');
-const jwt = required ('jsonwebtoken');
+const userModule = require('../models/user.model.js');
+const bcrypt = require ('bcrypt');
+const jwt = require ('jsonwebtoken');
 
-model.exports.registration = async (req , res, next)=>{
-    const {fullname, email, password}= req.boady;
-    const hashedPassword = await userModule.hashPassword (password);
-    const user = await userModule.create({
-        fullname,
-        email,
-        password:hashedPassword,
-    });
-}
-module.exports.login = async (req, res, next ) =>{
-    const {email.password} = req.body;
-    const
+module.exports.authUser = async (req, res, next) => {
+    const token = req.cookies.token || req.headers.authorization.split(' ')[1];
+    if(!token){
+        return res,status(401).json({ error: 'Unauthorizes'});
+    }
+     
+    try{
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await userModule.finallyByID(decoded._id);
+
+        req.user = user;
+
+        return next();
+
+
+    } catch (err){
+        return res.status(401).json({ message: 'Unauthorized'});
+        
+    } 
 }

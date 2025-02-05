@@ -1,60 +1,76 @@
 const userModel = require('../models/user.model');
-const userService = require ('../services/user.service');
+const userService = require('../services/user.service');
 const { validationResult } = require('express-validator');
 
+module.exports.registerUser = async (req, res, next) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
+        console.log(req.body);
 
-module.exports.registerUser = async (req, resizeBy, next) =>{
+        const { fullname, email, password } = req.body;
 
- const errors = validationResult(req);
- if(!errors.isEmpty()){
-    return res.status(400).json({error: error.array() });
- }
+        if (!fullname || !fullname.firstname || !fullname.lastname) {
+            return res.status(400).json({ error: 'Firstname and Lastname are required' });
+        }
 
- console.log(req.body);
+        const hashedPassword = await userModel.hashPassword(password);
 
- const { fullname, email, password} = req.body;
+        const user = await userService.createUser({
+            firstname: fullname.firstname,
+            lastname: fullname.lastname,
+            email,
+            password: hashedPassword
+        });
 
- const hashedPassword = await userModel.hashedPassword(password);
+        const token = user.generateAuthToken();
 
- const user = await userService.createUser({
-    firstname:fullname.firstname,
-    lastname:fullname.lastname,
-    email,
-    password:hashedPassword
- });
+        res.status(201).json({ token, user });
+    } catch (error) {
+        next(error);
+    }
+};
 
-const token = user.generateAuthToken();
+module.exports.loginUser = async (req, res, next) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
-res.status(201).json({ token, user});
+        const { email, password } = req.body;
 
-} 
-
-module.exports.loginUser = async (req, res, next) =>{
-      const errors = validationResult(req);
-      if(!errors.isEmpty()){
-            return res.status(400).json({error: error.array()});
-      }
-       const {email, password} = req.body;
-
-       const user = await userServices.findUserByEmail(email);
-       if(!user){
-         return res.status(400).json ({error: 'Invalid email or password'});
-       }
+        const user = await userService.findUserByEmail(email);
+        if (!user) {
+            return res.status(400).json({ error: 'Invalid email or password' });
+        }
 
         const isValid = await user.isValidPassword(password);
-        if(!isValid){
-         return res.status(400).json({error: 'Invalid email or password'});
+        if (!isValid) {
+            return res.status(400).json({ error: 'Invalid email or password' });
         }
 
         const token = user.generateAuthToken();
 
-        res.status(200).json({token, user})
-        
-}
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 3600000
+        });
 
-module.exports.getUserProfile = async (req, res, next) =>{
-    const user = await userService.findUserById(req.user._id);
-    res.status(200).json(user);
-}
+        res.status(200).json({ token, user });
+    } catch (error) {
+        next(error);
+    }
+};
 
+module.exports.getUserProfile = async (req, res, next) => {
+    try {
+        res.status(200).json(req.user);
+    } catch (error) {
+        next(error);
+    }
+};
