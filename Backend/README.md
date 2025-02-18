@@ -126,6 +126,9 @@ The request body should be in JSON format and include the following fields:
   - `plate` (string, required): Vehicle plate number (minimum 3 characters).
   - `capacity` (number, required): Vehicle passenger capacity (minimum 1).
   - `vehicleType` (string, required): Type of vehicle (must be 'car', 'motorcycle', or 'auto').
+  - `location` (object):
+    - `lat` (number, required): Latitude of the vehicle's location.
+    - `lng` (number, required): Longitude of the vehicle's location.
 
 ### Example Response
 
@@ -140,6 +143,9 @@ The request body should be in JSON format and include the following fields:
     - `plate` (string): Vehicle plate number.
     - `capacity` (number): Vehicle passenger capacity.
     - `vehicleType` (string): Type of vehicle.
+    - `location` (object):
+      - `lat` (number): Latitude of the vehicle's location.
+      - `lng` (number): Longitude of the vehicle's location.
 - `token` (String): JWT Token
 
 ## `/captains/login` Endpoint

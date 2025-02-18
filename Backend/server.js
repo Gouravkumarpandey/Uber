@@ -19,7 +19,7 @@ console.log(`DB_CONNECT: ${dbConnect}`);
 console.log(`PORT: ${port}`);
 
 function connectToDb() {
-    mongoose.connect(dbConnect, { useNewUrlParser: true, useUnifiedTopology: true })
+    mongoose.connect(dbConnect)
         .then(() => {
             console.log('Connected to DB');
         })
@@ -31,10 +31,22 @@ function connectToDb() {
 
 connectToDb();
 
-app.listen(port, (err) => {
+const server = app.listen(port, (err) => {
     if (err) {
         console.error('Failed to start server', err);
         process.exit(1); // Exit the process with failure
     }
     console.log(`Server is running on port ${port}`);
+});
+
+server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+        console.error(`Port ${port} is already in use. Trying another port...`);
+        setTimeout(() => {
+            server.close();
+            server.listen(0); // 0 means a random available port
+        }, 1000);
+    } else {
+        console.error('Server error:', err);
+    }
 });
