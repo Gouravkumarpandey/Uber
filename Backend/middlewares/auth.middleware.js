@@ -2,6 +2,7 @@ const userModule = require('../models/user.model.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const BlacklistToken = require('../models/blacklistToken.model.js');
+const captainModule = require('../models/captain.model.js');
 
 module.exports.authUser = async (req, res, next) => {
     const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
@@ -16,12 +17,13 @@ module.exports.authUser = async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await userModule.findById(decoded._id);
+        const captain = await captainModule.findById(decoded._id);
 
-        req.user = user;
+        req.captain = captain;
 
         return next();
     } catch (err) {
+        console.error(err);
         return res.status(401).json({ message: 'Unauthorized' });
     }
 };

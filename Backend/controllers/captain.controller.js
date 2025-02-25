@@ -10,7 +10,7 @@ module.exports.registerCaptain = async (req, res, next) => {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { fullname, email, password, vehicle } = req.body;
+        const { fullname, email, password, vehicle, location } = req.body;
 
         const isCaptainAlready = await captainModel.findOne({ email });
 
@@ -29,7 +29,8 @@ module.exports.registerCaptain = async (req, res, next) => {
             lastname: fullname.lastname,
             email,
             password: hashedPassword,
-            vehicle
+            vehicle,
+            location
         });
 
         const token = captain.generateAuthToken();
@@ -87,6 +88,7 @@ module.exports.logoutCaptain = async (req, res, next) => {
         const token = req.cookies.token || req.headers.authorization.split(' ')[1];
 
         await blackListTokenModel.create({ token });
+        
 
         res.status(200).json({ message: 'Logged out' });
     } catch (error) {
