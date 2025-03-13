@@ -1,8 +1,63 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const UserLogin = () => {
+  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
+
   return (
-    <div>UserLogin</div>
+    <div className="p-7 flex flex-col justify-between h-screen">
+      <div>
+        <img 
+          className='w-16 mb-10' 
+          src='https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png' 
+          alt='Uber logo'
+        />
+
+        <form>
+          <h3 className='text-lg font-medium mb-2'>What's your email</h3>
+          <input 
+            required 
+            className='bg-[#eeee] mb-7 rounded px-4 py-2 border w-full text-lg placeholder:text-base'
+            type="email" 
+            placeholder='email@example.com'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <h3 className='text-lg font-medium mb-2'>Enter Password</h3>
+          <input 
+            className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required 
+            type="password"
+            placeholder='password'
+          />
+
+          <button
+            className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
+          >
+            Login
+          </button>
+
+          <div className="text-center">
+            <p className='text-center'>New here?<Link to="/user/signup" className='text-blue-600 hover:underline'>
+              Create new Account
+            </Link></p>
+          </div>
+        </form>
+      </div>
+      <div>
+        <Link to="/captain/login">
+          <button 
+            className='bg-[#10b461] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
+          >
+            Sign-in as Captain
+          </button>
+        </Link>
+      </div>
+    </div>
   )
 }
 
