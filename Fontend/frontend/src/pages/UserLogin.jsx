@@ -2,8 +2,22 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const UserLogin = () => {
-  const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [userData, setUserData] = useState({})
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    setUserData({
+      email: email,
+      password: password
+    })
+    
+    setEmail('');
+    setPassword('');
+    // Handle form submission
+  }
 
   return (
     <div className="p-7 flex flex-col justify-between h-screen">
@@ -14,7 +28,9 @@ const UserLogin = () => {
           alt='Uber logo'
         />
 
-        <form>
+        <form onSubmit={(e)=>{
+          handleSubmit(e);
+        }}>
           <h3 className='text-lg font-medium mb-2'>What's your email</h3>
           <input 
             required 
@@ -36,25 +52,24 @@ const UserLogin = () => {
           />
 
           <button
+            type="submit"
             className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
           >
             Login
           </button>
 
           <div className="text-center">
-            <p className='text-center'>New here?<Link to="/user/signup" className='text-blue-600 hover:underline'>
+            <p className='text-center'>New here? <Link to="/user/signup" className='text-blue-600 hover:underline'>
               Create new Account
             </Link></p>
           </div>
         </form>
       </div>
       <div>
-        <Link to="/captain/login">
-          <button 
-            className='bg-[#10b461] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
-          >
-            Sign-in as Captain
-          </button>
+        <Link 
+          to='captain-login'
+            className='bg-[#10b461] flex items-center justify-center text-white font-semibold mb-5 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
+          >Sign-in as Captain
         </Link>
       </div>
     </div>
