@@ -93,9 +93,11 @@ const UserSignup = () => {
         </form>
       </div>
       <div>
-        <p className='text-[8px] leading-tight'>By proceeding, you consent to get calls, WhatsApp or SMS
-           messages, including by automated means, from Uber and 
-           its affiliates to the number provided. </p>
+        <Link 
+          to='/captain/login'
+            className='bg-[#10b461] flex items-center justify-center text-white font-semibold mb-5 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
+          >Sign-in as Captain
+        </Link>
       </div>
     </div>
   )

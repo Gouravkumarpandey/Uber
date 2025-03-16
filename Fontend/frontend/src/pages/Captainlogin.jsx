@@ -60,7 +60,7 @@ const Captainlogin = () => {
           </button>
 
           <div className="text-center">
-            <p className='text-center'>Ready to Drive & Earn? <Link to="//signup" className='text-blue-600 hover:underline'>
+            <p className='text-center'>Ready to Drive & Earn? <Link to="/captain/signup" className='text-blue-600 hover:underline'>
               Register as a Captain
             </Link></p>
           </div>
