@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useContext } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { UserDataContext } from '../context/UserContext'
 
 const UserSignup = () => {
   const [firstName, setFirstName] = useState('')
@@ -8,18 +10,33 @@ const UserSignup = () => {
   const [password, setPassword] = useState('')
   const [userData, setUserData] = useState({})
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate()
+
+  const { user, setUser } = useContext(UserDataContext)
+
+  const submitHandler = async (e) => {
     e.preventDefault();
-    
-    setUserData({
-      fullName:{
-      firstName: firstName,
-      lastName: lastName,
+    const newUser = {
+      fullname: {
+        firstname: firstName,
+        lastname: lastName,
       },
       email: email,
       password: password
-    })
-    console.log(userData);
+    }
+
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser)
+    
+      if (response.status === 201) {
+        const data = await response.data
+        setUser(data.user)
+            navigate('/home')
+      }
+    } catch (error) {
+      console.error('Error creating account:', error.message);
+    }
+  
     setFirstName('');
     setLastName('');
     setEmail('');
@@ -36,8 +53,8 @@ const UserSignup = () => {
           alt='Uber logo'
         />
 
-        <form onSubmit={(e)=>{
-          handleSubmit(e);
+        <form onSubmit={(e) => {
+          submitHandler(e);
         }}>
 
           <h3 className='text-lg font-medium mb-2'>Enter your name</h3>
@@ -84,7 +101,7 @@ const UserSignup = () => {
             type="submit"
             className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
           >
-            Login
+            Create account
           </button>
 
           <div className="text-center">

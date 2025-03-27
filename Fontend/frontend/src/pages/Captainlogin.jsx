@@ -40,6 +40,7 @@ const Captainlogin = () => {
             placeholder='email@example.com'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autocomplete="email"
           />
 
           <h3 className='text-lg font-medium mb-2'>Enter Password</h3>
@@ -50,6 +51,7 @@ const Captainlogin = () => {
             required 
             type="password"
             placeholder='password'
+            autocomplete="current-password"
           />
 
           <button
