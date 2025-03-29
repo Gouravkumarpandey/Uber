@@ -73,7 +73,7 @@ const UserLogin = () => {
           >Login</button>
 
         </form>
-        <p className='text-center'>New here? <Link to='/signup' className='text-blue-600'>Create new Account</Link></p>
+        <p className='text-center'>New here? <Link to='/user/signup' className='text-blue-600'>Create new Account</Link></p>
       </div>
       <div>
         <Link
