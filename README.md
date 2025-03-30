@@ -1,4 +1,4 @@
-# Uber Clone Project
+# Uber Project
 
 A full-stack application that replicates core Uber functionalities using the MERN stack (MongoDB, Express.js, React.js, Node.js).
 
