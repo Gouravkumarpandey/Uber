@@ -1,199 +1,181 @@
-# Uber Project
+# Uber
 
-A full-stack application that replicates core Uber functionalities using the MERN stack (MongoDB, Express.js, React.js, Node.js).
+A full-stack ride-sharing application built with MERN stack that replicates core Uber functionalities.
 
-## Project Structure
+## 🌟 Key Features
 
-```
-uber-clone/
-├── Frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── context/
-│   │   ├── pages/
-│   │   └── App.jsx
-└── Backend/
-    ├── controllers/
-    ├── models/
-    ├── routes/
-    ├── services/
-    ├── middlewares/
-    └── server.js
-```
+- **Authentication**
+  - User & Captain signup/login
+  - JWT-based authentication
+  - Protected routes
 
-## Features
+- **Real-time Features**
+  - Live location tracking
+  - Real-time ride status updates
+  - Socket.io integration
+  - Live fare estimation
 
-- User Authentication (Signup/Login)
-- Captain Authentication (Signup/Login)
-- Real-time Location Tracking
-- Ride Booking System
-- Fare Estimation
-- Live Ride Status Updates
-- Socket.io Integration for Real-time Communication
+- **Ride Management**
+  - Multiple vehicle types
+  - Automated fare calculation
+  - Route visualization
+  - OTP verification
 
-## Technologies Used
+## 🛠️ Tech Stack
 
 ### Frontend
-- React.js (with Vite)
-- Tailwind CSS
-- Socket.io-client
-- Axios
-- React Router DOM
-- GSAP for animations
-- RemixIcon
-- Context API for state management
+- **React** (Vite) - UI framework
+- **Tailwind CSS** - Styling
+- **GSAP** - Animations
+- **Socket.io-client** - Real-time communication
+- **Axios** - HTTP client
+- **React Router DOM** - Navigation
+- **Context API** - State management
 
 ### Backend
-- Node.js
-- Express.js
-- MongoDB (with Mongoose)
-- JWT for authentication
-- Socket.io
-- bcrypt for password hashing
-- Express Validator
-- Cookie Parser
-- CORS
+- **Node.js** & **Express.js** - Server
+- **MongoDB** & **Mongoose** - Database
+- **Socket.io** - Real-time events
+- **JWT** - Authentication
+- **Bcrypt** - Password hashing
 
-## Setup Instructions
+## 📁 Project Structure
+```
+uber/
+├── Frontend/
+│   ├── src/
+│   │   ├── components/          # Reusable components
+│   │   ├── context/            # Context providers
+│   │   ├── pages/             # Route components
+│   │   └── App.jsx           # Main app component
+│   ├── vite.config.js
+│   └── package.json
+│
+└── Backend/
+    ├── controllers/           # Route controllers
+    ├── models/               # Database models
+    ├── routes/              # API routes
+    ├── services/           # Business logic
+    ├── middlewares/       # Custom middlewares
+    └── server.js         # Entry point
+```
+
+## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v14 or higher)
+- Node.js v14+
 - MongoDB
 - Git
 
 ### Backend Setup
-1. Navigate to the backend directory:
 ```bash
+# Navigate to backend
 cd Backend
-```
 
-2. Install dependencies:
-```bash
+# Install dependencies
 npm install
-```
 
-3. Create a `.env` file with the following variables:
-```env
-PORT=3000
-DB_CONNECT=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
-```
+# Create .env file
+echo "PORT=3000
+DB_CONNECT=mongodb://localhost:27017/uber-clone
+JWT_SECRET=your-secret-key" > .env
 
-4. Start the server:
-```bash
+# Start server
 npm start
 ```
 
 ### Frontend Setup
-1. Navigate to the frontend directory:
 ```bash
+# Navigate to frontend
 cd Frontend
-```
 
-2. Install dependencies:
-```bash
+# Install dependencies
 npm install
-```
 
-3. Create a `.env` file with:
-```env
-VITE_BASE_URL=http://localhost:3000
-```
+# Create .env file
+echo "VITE_BASE_URL=http://localhost:3000" > .env
 
-4. Start the development server:
-```bash
+# Start development server
 npm run dev
 ```
 
-## API Documentation
+## 🔌 Socket Events
+
+```javascript
+// User events
+socket.emit('join', { userType: 'user', userId })
+socket.on('ride-confirmed', (rideData) => {})
+socket.on('ride-started', (rideData) => {})
+
+// Captain events
+socket.emit('join', { userType: 'captain', userId })
+socket.emit('update-location-captain', locationData)
+socket.on('new-ride', (rideData) => {})
+```
+
+## 🔒 API Endpoints
 
 ### User Routes
-- POST `/users/register` - Register new user
-- POST `/users/login` - User login
-- GET `/users/profile` - Get user profile
-- GET `/users/logout` - Logout user
+```
+POST /users/register     # Register new user
+POST /users/login       # Login user
+GET  /users/profile     # Get user profile
+GET  /users/logout      # Logout user
+```
 
 ### Captain Routes
-- POST `/captains/register` - Register new captain
-- POST `/captains/login` - Captain login
-- GET `/captains/profile` - Get captain profile
-- GET `/captains/logout` - Logout captain
-
-### Map Routes
-- GET `/maps/get-coordinates` - Get coordinates from address
-- GET `/maps/get-distance-time` - Get distance and time between locations
-- GET `/maps/get-suggestions` - Get location suggestions
+```
+POST /captains/register # Register captain
+POST /captains/login    # Login captain
+GET  /captains/profile  # Get captain profile
+GET  /captains/logout   # Logout captain
+```
 
 ### Ride Routes
-- POST `/rides/create` - Create new ride
-- GET `/rides/get-fare` - Get fare estimate
-
-## Main Dependencies
-
-### Frontend Dependencies
-```json
-{
-  "@gsap/react": "^2.1.2",
-  "axios": "^1.8.3",
-  "gsap": "^3.12.7",
-  "react": "^19.0.0",
-  "react-router-dom": "^7.3.0",
-  "remixicon": "^4.6.0",
-  "socket.io-client": "^4.8.1",
-  "tailwindcss": "^3.4.17"
-}
+```
+POST /rides/create      # Create new ride
+GET  /rides/get-fare   # Get fare estimate
 ```
 
-### Backend Dependencies
-```json
-{
-  "bcrypt": "^5.1.1",
-  "cookie-parser": "^1.4.7",
-  "cors": "^2.8.5",
-  "express": "^4.21.2",
-  "express-validator": "^7.2.1",
-  "jsonwebtoken": "^9.0.2",
-  "mongoose": "^8.9.5",
-  "socket.io": "^4.8.1"
-}
+## 💻 Development Commands
+
+```bash
+# Frontend
+npm run dev            # Start development server
+npm run build          # Build for production
+npm run lint          # Run ESLint
+
+# Backend
+npm start            # Start server
+npm run dev         # Start with nodemon
 ```
 
-## Features in Detail
+## 🔐 Environment Variables
 
-### User Features
-- User registration and authentication
-- Book rides
-- Real-time ride tracking
-- View ride history
-- Multiple vehicle type options
-- Fare estimation
-- Live driver location tracking
+### Backend (.env)
+```
+PORT=3000
+DB_CONNECT=mongodb://localhost:27017/uber-clone
+JWT_SECRET=your-secret-key
+```
 
-### Captain Features
-- Captain registration and authentication
-- Accept/Reject rides
-- Update location in real-time
-- View ride details
-- Complete rides
-- View earnings
+### Frontend (.env)
+```
+VITE_BASE_URL=http://localhost:4000
+```
 
-## Socket.io Events
-
-- `join` - When user/captain connects
-- `update-location-captain` - Real-time captain location updates
-- `new-ride` - When a new ride is created
-- `ride-confirmed` - When captain accepts ride
-- `ride-started` - When ride begins
-- `ride-ended` - When ride completes
-
-## Contributing
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+2. Create feature branch (`git checkout -b feature/Amazing`)
+3. Commit changes (`git commit -m 'Add Amazing Feature'`)
+4. Push to branch (`git push origin feature/Amazing`)
 5. Open a Pull Request
 
-## License
+## 📝 License
 
-This project is licensed under the MIT License.
+This project is MIT licensed.
+
+##  Author
+
+ Gourav Kumar Pandey(https://github.com/Gouravkumarpandey)
