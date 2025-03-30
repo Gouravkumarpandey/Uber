@@ -43,32 +43,36 @@ module.exports.loginUser = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).json({ error: errors.array()[0].msg }); // Validation error
         }
 
         const { email, password } = req.body;
 
-        const user = await userService.findUserByEmail(email);
+        // Ensure email and password are provided
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email and password are required' });
+        }
+
+        // Find user by email
+        const user = await userModel.findOne({ email }).select('+password');
         if (!user) {
             return res.status(400).json({ error: 'Invalid email or password' });
         }
 
-        const isValid = await user.isValidPassword(password);
+        // Compare passwords
+        const isValid = await user.comparePassword(password);
         if (!isValid) {
             return res.status(400).json({ error: 'Invalid email or password' });
         }
 
+        // Generate token
         const token = user.generateAuthToken();
 
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 3600000
-        });
-
+        // Return user and token
         res.status(200).json({ token, user });
     } catch (error) {
-        next(error);
+        console.error('Error in loginUser:', error); // Log the error for debugging
+        res.status(500).json({ error: 'Internal server error' }); // Return a generic error message
     }
 };
 
