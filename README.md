@@ -76,8 +76,8 @@ cd Backend
 npm install
 
 # Create .env file
-echo "PORT=3000
-DB_CONNECT=mongodb://localhost:27017/uber-clone
+echo "PORT=4000
+DB_CONNECT=mongodb://localhost:27017/uber
 JWT_SECRET=your-secret-key" > .env
 
 # Start server
@@ -93,7 +93,7 @@ cd Frontend
 npm install
 
 # Create .env file
-echo "VITE_BASE_URL=http://localhost:3000" > .env
+echo "VITE_BASE_URL=http://localhost:4000" > .env
 
 # Start development server
 npm run dev
@@ -155,7 +155,7 @@ npm run dev         # Start with nodemon
 ### Backend (.env)
 ```
 PORT=3000
-DB_CONNECT=mongodb://localhost:27017/uber-clone
+DB_CONNECT=mongodb://localhost:27017/uber
 JWT_SECRET=your-secret-key
 ```
 
