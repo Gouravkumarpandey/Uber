@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import FinishRide from '../components/FinishRide'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
+import FinishRide from "../components/FinishRide";
+import { useGSAP } from "@gsap/react"; // Correct package
+import gsap from "gsap"; // Correct package
 import LiveTracking from '../components/LiveTracking'
 
 const CaptainRiding = () => {

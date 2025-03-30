@@ -1,88 +1,111 @@
-import React, { useState, useContext } from 'react'
-import { Link } from 'react-router-dom'
-import { UserDataContext } from '../context/UserContext'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { UserDataContext } from '../context/UserContext';
 
 const UserLogin = () => {
-  const [ email, setEmail ] = useState('')
-  const [ password, setPassword ] = useState('')
-  const [ userData, setUserData ] = useState({})
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const { setUser } = useContext(UserDataContext);
 
-  const { user, setUser } = useContext(UserDataContext)
-  const navigate = useNavigate()
-
-
-
-  const submitHandler = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
 
-    const userData = {
-      email: email,
-      password: password
+    if (!navigator.onLine) {
+      setError('Please check your internet connection');
+      return;
     }
 
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData)
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/users/login`,
+        { email, password },
+        { timeout: 5000 }
+      );
 
-    if (response.status === 200) {
-      const data = response.data
-      setUser(data.user)
-      localStorage.setItem('token', data.token)
-      navigate('/home')
+      if (response.status === 200) {
+        const data = response.data;
+        setUser(data.user);
+        localStorage.setItem('token', data.token);
+        navigate('/home');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      
+      if (axios.isAxiosError(error)) {
+        if (error.code === 'ECONNABORTED') {
+          setError('Request timed out. Please try again.');
+        } else if (!error.response) {
+          setError('Unable to connect to server. Please try again.');
+        } else {
+          setError(error.response?.data?.message || 'Invalid email or password');
+        }
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
-
-
-    setEmail('')
-    setPassword('')
-  }
+  };
 
   return (
-    <div className='p-7 h-screen flex flex-col justify-between'>
-      <div>
-        <img className='w-16 mb-10' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYQy-OIkA6In0fTvVwZADPmFFibjmszu2A0g&s" alt="" />
-
-        <form onSubmit={(e) => {
-          submitHandler(e)
-        }}>
-          <h3 className='text-lg font-medium mb-2'>What's your email</h3>
-          <input
-            required
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value)
-            }}
-            className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
-            type="email"
-            placeholder='email@example.com'
+    <div>
+      <div className="p-7 h-screen flex flex-col justify-between">
+        <div>
+          <img
+            className="w-16 mb-10"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYQy-OIkA6In0fTvVwZADPmFFibjmszu2A0g&s"
+            alt="logo"
           />
 
-          <h3 className='text-lg font-medium mb-2'>Enter Password</h3>
+          <form onSubmit={handleSubmit}>
+            <h3 className="text-lg font-medium mb-2">Enter your email</h3>
+            <input
+              required
+              className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base"
+              type="email"
+              placeholder="email@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+            />
 
-          <input
-            className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value)
-            }}
-            required type="password"
-            placeholder='password'
-          />
+            <h3 className="text-lg font-medium mb-2">Enter your password</h3>
+            <input
+              required
+              className="bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base"
+              type="password"
+              placeholder="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+            />
 
-          <button
-            className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
-          >Login</button>
+            {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
-        </form>
-        <p className='text-center'>New here? <Link to='/user/signup' className='text-blue-600'>Create new Account</Link></p>
-      </div>
-      <div>
-        <Link
-          to='/captain-login'
-          className='bg-[#10b461] flex items-center justify-center text-white font-semibold mb-5 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
-        >Sign in as Captain</Link>
+            <button
+              type="submit"
+              className="bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg"
+            >
+              Login
+            </button>
+          </form>
+
+          <p className="text-center">
+            Don't have an account? <Link to="/user/signup" className="text-blue-600">Sign up</Link>
+          </p>
+        </div>
+        <div>
+          <p className="text-[10px] leading-tight">
+            This site is protected by reCAPTCHA and the Google{' '}
+            <span className="underline">Privacy Policy</span> and{' '}
+            <span className="underline">Terms of Service</span> apply.
+          </p>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default UserLogin
+export default UserLogin;
